@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>羽毛球双打组队</title>
+  <style>
+    body,div,input,button,ul,li {
+      margin: 0;
+      padding: 0;
+      font-size: 40px;
+      box-sizing: content-box;
+    }
+    /* body{
+      font-size: 40px;
+    } */
+    li {
+      list-style-type: none;
+      height: 80px;
+      margin-top: 20px;
+      display: flex;
+    }
+
+    li>input {
+      flex:1;
+      margin:0 20px 0 40px;
+      border: 2px solid #ddd;
+      border-radius: 20px;
+      text-align: center;
+      /* font-size: inherit; */
+    }
+
+    li>button {
+      width:80px;
+      padding:0 20px;
+      margin:0 40px 0 20px;
+      color: red;
+      background: #eee;
+      border-color: #fff;
+    }
+    .button{
+      display: flex;
+      justify-content: center;
+      margin-top:40px;
+    }
+    #addPerson,#createAganistPlan{
+      font-size: inherit;
+      background: lemonchiffon;
+      border-radius: 20px;
+      height:100px;
+      width:45%;
+      display: inline-block;
+      margin: 10px auto;
+    }
+    #againstList{
+      margin-top:20px;
+    }
+    #againstList>.item{
+      margin:40px auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      /* font-size: 40px; */
+      background: #eee;
+    }
+    .side{
+      /* font-size: inherit; */
+    }
+    .sideA,.sideB{
+      margin:20px;
+    }
+    .score{
+      display:flex;
+      align-items: center;
+    }
+    .scoreA,.scoreB{
+      width:120px;
+      height:120px;
+      margin:20px;
+      border-radius: 50%;
+      background: red;
+      border:none;
+      text-align: center;
+      line-height: 40px;
+      /* font-size: 40px; */
+    }
+  </style>
+</head>
+
+<body>
+  <ul id="personList">
+    <li>
+      <input type="text" class="personName" value="张三">
+      <button class="del">删除</button>
+    </li>
+    <li>
+      <input type="text" class="personName" value="王五">
+      <button class="del">删除</button>
+    </li>
+    <li>
+      <input type="text" class="personName" value="李四">
+      <button class="del">删除</button>
+    </li>
+    <li>
+      <input type="text" class="personName" value="赵六">
+      <button class="del">删除</button>
+    </li>
+    <li>
+      <input type="text" class="personName">
+      <button class="del">删除</button>
+    </li>
+    <li>
+      <input type="text" class="personName">
+      <button class="del">删除</button>
+    </li>
+    <li>
+      <input type="text" class="personName">
+      <button class="del">删除</button>
+    </li>
+    <li>
+      <input type="text" class="personName">
+      <button class="del">删除</button>
+    </li>
+  </ul>
+  <div class="button">
+      <button id="addPerson">新增人员</button>
+      <button id="createAganistPlan">生成对阵表</button>
+  </div>
+  <div id="againstList">
+    <div class="item">
+      <div class="side">
+        <div class="name1 sideA"></div>
+        <div class="name2 sideA"></div>
+      </div>
+      <div class="score">
+        <input type="number" class="scoreA" value="10">
+        <span>:</span>
+        <input type="number" class="scoreB" value="0">
+      </div>
+      <div class="side">
+        <div class="name3 sideB"></div>
+        <div class="name4 sideB"></div>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>
+<script>
+
+  var personList = [];
+  document.getElementById('addPerson').addEventListener('click', function () { addPeron() });
+  document.getElementById('personList').addEventListener('click', function (e) { delPerson(e) })
+  document.getElementById('createAganistPlan').addEventListener('click', function () {
+    let plans = createAganistPlan();
+    createPage(plans);
+  })
+
+  class AganistPlan {
+    constructor(personList) {
+      this.personList = personList;
+      this.aganistPlan = [];
+      this.__getAganistPlan()
+    }
+    __getAganistPlan() {
+      let teammateList = this.__getTeammateList();
+
+      let allMayAganistPlan = this.__getAllMayAganistPlan(teammateList);
+      this.__removeReapte(allMayAganistPlan);
+    }
+    __getTeammateList() {
+      let length = this.personList.length;
+      let teammateList = [];
+      for (let i = 0; i < length - 1; i++) {
+        for (let j = i + 1; j < length; j++) {
+          teammateList.push([this.personList[i], this.personList[j]])
+        }
+      }
+      return teammateList;
+    }
+
+    __getAllMayAganistPlan(teammateList) {
+      let allMayAganistPlan = [];
+      length = teammateList.length;
+      for (let k = 0; k < length - 1; k++) {
+        for (let q = k + 1; q < length; q++) {
+          let b = [...(new Set([...teammateList[k], ...teammateList[q]]))];
+          b.length === 4 ? allMayAganistPlan.push([teammateList[k].join(' '), teammateList[q].join(' ')]) : '';
+        }
+      }
+      return allMayAganistPlan;
+    }
+
+    __removeReapte(allMayAganistPlan) {
+      let length = allMayAganistPlan.length;
+      for (let m = 0; m < length - 1; m++) {
+        for (let n = m + 1; n < length && allMayAganistPlan[m].length === 2; n++) {
+          for (let x = 0; x < 2 && allMayAganistPlan[n].length === 2; x++) {
+            if (allMayAganistPlan[m].indexOf(allMayAganistPlan[n][x]) !== -1) {
+              allMayAganistPlan[n].push('tag');
+            }
+          }
+        }
+      }
+      this.aganistPlan = allMayAganistPlan.filter(item => { return item.length === 2 });
+    }
+  }
+  function addPeron() {
+    let warp = document.getElementById('personList');
+    let template = warp.firstElementChild.cloneNode(true);
+    template.querySelector('.personName').value='';
+    warp.appendChild(template);
+  }
+  function delPerson(e) {
+    if (e.target.tagName !== "BUTTON") { return };
+    let template = e.target.parentNode;
+    let warp = template.parentNode;
+    warp.removeChild(template);
+  }
+  function createPersonList() {
+    let personList = [];
+    let warp = document.getElementById('personList');
+    let nodeList = warp.querySelectorAll('.personName');
+    for (node of nodeList) {
+      personList.push(node.value);
+    }
+    return [...new Set(personList)]
+  }
+  function createAganistPlan() {
+    personList = createPersonList();
+    var plans = new AganistPlan(personList).aganistPlan;
+    plans.forEach(item => { console.log('对阵', item) });
+    return plans;
+  }
+
+  function createPage(plans) {
+    let warp = document.getElementById('againstList');
+    let template = warp.firstElementChild.cloneNode(true);
+    warp.innerHTML='';
+    let fragment = document.createDocumentFragment()
+    for (let i = 0; i < plans.length; i++) {
+      let node=template.cloneNode(true);     
+      let newPlans=[].concat(plans[i][0].split(' '),plans[i][1].split(' '));
+      for(let j=0;j<4;j++){
+        node.querySelector(`.name${j+1}`).textContent=newPlans[j];
+      }
+      fragment.appendChild(node)
+    }
+    warp.appendChild(fragment);
+  }
+
+
+</script>
