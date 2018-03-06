@@ -43,7 +43,7 @@
       justify-content: center;
       margin-top:40px;
     }
-    #addPerson,#createAganistPlan{
+    #addPerson,#createAgaisstPlan{
       font-size: inherit;
       background: lemonchiffon;
       border-radius: 20px;
@@ -124,7 +124,7 @@
   </ul>
   <div class="button">
       <button id="addPerson">新增人员</button>
-      <button id="createAganistPlan">生成对阵表</button>
+      <button id="createAgainstPlan">生成对阵表</button>
   </div>
   <div id="againstList">
     <div class="item">
@@ -151,22 +151,22 @@
   var personList = [];
   document.getElementById('addPerson').addEventListener('click', function () { addPeron() });
   document.getElementById('personList').addEventListener('click', function (e) { delPerson(e) })
-  document.getElementById('createAganistPlan').addEventListener('click', function () {
-    let plans = createAganistPlan();
+  document.getElementById('createAgainstPlan').addEventListener('click', function () {
+    let plans = createAgainstPlan();
     createPage(plans);
   })
 
-  class AganistPlan {
+  class AgainstPlan {
     constructor(personList) {
       this.personList = personList;
-      this.aganistPlan = [];
-      this.__getAganistPlan()
+      this.againstPlan = [];
+      this.__getAgainstPlan()
     }
-    __getAganistPlan() {
+    __getAgainstPlan() {
       let teammateList = this.__getTeammateList();
 
-      let allMayAganistPlan = this.__getAllMayAganistPlan(teammateList);
-      this.__removeReapte(allMayAganistPlan);
+      let allMayAgainstPlan = this.__getAllMayAgainstPlan(teammateList);
+      this.__removeReapte(allMayAgainstPlan);
     }
     __getTeammateList() {
       let length = this.personList.length;
@@ -179,30 +179,30 @@
       return teammateList;
     }
 
-    __getAllMayAganistPlan(teammateList) {
-      let allMayAganistPlan = [];
+    __getAllMayAgainstPlan(teammateList) {
+      let allMayAgainstPlan = [];
       length = teammateList.length;
       for (let k = 0; k < length - 1; k++) {
         for (let q = k + 1; q < length; q++) {
           let b = [...(new Set([...teammateList[k], ...teammateList[q]]))];
-          b.length === 4 ? allMayAganistPlan.push([teammateList[k].join(' '), teammateList[q].join(' ')]) : '';
+          b.length === 4 ? allMayAgainstPlan.push([teammateList[k].join(' '), teammateList[q].join(' ')]) : '';
         }
       }
-      return allMayAganistPlan;
+      return allMayAgainstPlan;
     }
 
-    __removeReapte(allMayAganistPlan) {
-      let length = allMayAganistPlan.length;
+    __removeReapte(allMayAgainstPlan) {
+      let length = allMayAgainstPlan.length;
       for (let m = 0; m < length - 1; m++) {
-        for (let n = m + 1; n < length && allMayAganistPlan[m].length === 2; n++) {
-          for (let x = 0; x < 2 && allMayAganistPlan[n].length === 2; x++) {
-            if (allMayAganistPlan[m].indexOf(allMayAganistPlan[n][x]) !== -1) {
-              allMayAganistPlan[n].push('tag');
+        for (let n = m + 1; n < length && allMayAgainstPlan[m].length === 2; n++) {
+          for (let x = 0; x < 2 && allMayAgainstPlan[n].length === 2; x++) {
+            if (allMayAgainstPlan[m].indexOf(allMayAgainstPlan[n][x]) !== -1) {
+              allMayAgainstPlan[n].push('tag');
             }
           }
         }
       }
-      this.aganistPlan = allMayAganistPlan.filter(item => { return item.length === 2 });
+      this.againstPlan = allMayAgainstPlan.filter(item => { return item.length === 2 });
     }
   }
   function addPeron() {
@@ -226,9 +226,9 @@
     }
     return [...new Set(personList)]
   }
-  function createAganistPlan() {
+  function createAgainstPlan() {
     personList = createPersonList();
-    var plans = new AganistPlan(personList).aganistPlan;
+    var plans = new AgainstPlan(personList).againstPlan;
     plans.forEach(item => { console.log('对阵', item) });
     return plans;
   }
