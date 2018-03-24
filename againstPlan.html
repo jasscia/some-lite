@@ -3,251 +3,278 @@
 
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>羽毛球双打组队</title>
-  <style>
-    body,div,input,button,ul,li {
-      margin: 0;
-      padding: 0;
-      font-size: 40px;
-      box-sizing: content-box;
-    }
-    /* body{
-      font-size: 40px;
-    } */
-    li {
-      list-style-type: none;
-      height: 80px;
-      margin-top: 20px;
-      display: flex;
-    }
-
-    li>input {
-      flex:1;
-      margin:0 20px 0 40px;
-      border: 2px solid #ddd;
-      border-radius: 20px;
-      text-align: center;
-      /* font-size: inherit; */
-    }
-
-    li>button {
-      width:80px;
-      padding:0 20px;
-      margin:0 40px 0 20px;
-      color: red;
-      background: #eee;
-      border-color: #fff;
-    }
-    .button{
-      display: flex;
-      justify-content: center;
-      margin-top:40px;
-    }
-    #addPerson,#createAgaisstPlan{
-      font-size: inherit;
-      background: lemonchiffon;
-      border-radius: 20px;
-      height:100px;
-      width:45%;
-      display: inline-block;
+  <style lang="less">
+   html,body{
+     margin: 0;
+     padding:0;
+     font-size: 20px;
+   }
+   .item{
+     margin:20px 0;
+     text-align: end;
+     padding-right: 25%;
+   }
+   input,#btn{
+     padding:10px 0;
+     border-radius: 5px;
+     border:2px solid #eee;
+     color: #000;
+     text-align:center;
+   }
+   #btn{
+     display: block;
+     padding:10px;
+     width:50%;
+     margin: auto;
+   }
+   .result{
+     font-size: 14px;
+   }
+   .result .err{
+     text-align: center;
+   }
+  .result .item{
       margin: 10px auto;
-    }
-    #againstList{
-      margin-top:20px;
-    }
-    #againstList>.item{
-      margin:40px auto;
+      padding:5px;
       display: flex;
-      align-items: center;
       justify-content: space-around;
-      /* font-size: 40px; */
-      background: #eee;
-    }
-    .side{
-      /* font-size: inherit; */
-    }
-    .sideA,.sideB{
-      margin:20px;
-    }
-    .score{
-      display:flex;
-      align-items: center;
-    }
-    .scoreA,.scoreB{
-      width:120px;
-      height:120px;
-      margin:20px;
-      border-radius: 50%;
-      background: red;
-      border:none;
-      text-align: center;
-      line-height: 40px;
-      /* font-size: 40px; */
-    }
+      border-bottom:5px solid #eee;
+     }
+  .result .side{
+    flex:1;
+    font-size:20px;
+    text-align: center;
+  }
+  .result .mark p{
+    margin:0;
+    padding:0;
+    text-align: center;
+  }
+  
   </style>
 </head>
-
 <body>
-  <ul id="personList">
-    <li>
-      <input type="text" class="personName" value="张三">
-      <button class="del">删除</button>
-    </li>
-    <li>
-      <input type="text" class="personName" value="王五">
-      <button class="del">删除</button>
-    </li>
-    <li>
-      <input type="text" class="personName" value="李四">
-      <button class="del">删除</button>
-    </li>
-    <li>
-      <input type="text" class="personName" value="赵六">
-      <button class="del">删除</button>
-    </li>
-    <li>
-      <input type="text" class="personName">
-      <button class="del">删除</button>
-    </li>
-    <li>
-      <input type="text" class="personName">
-      <button class="del">删除</button>
-    </li>
-    <li>
-      <input type="text" class="personName">
-      <button class="del">删除</button>
-    </li>
-    <li>
-      <input type="text" class="personName">
-      <button class="del">删除</button>
-    </li>
-  </ul>
-  <div class="button">
-      <button id="addPerson">新增人员</button>
-      <button id="createAgainstPlan">生成对阵表</button>
+  <div class="item">
+      <label for="personNum">人数</label>
+      <input type="number" name="" id="personNum">
   </div>
-  <div id="againstList">
-    <div class="item">
-      <div class="side">
-        <div class="name1 sideA"></div>
-        <div class="name2 sideA"></div>
-      </div>
-      <div class="score">
-        <input type="number" class="scoreA" value="10">
-        <span>:</span>
-        <input type="number" class="scoreB" value="0">
-      </div>
-      <div class="side">
-        <div class="name3 sideB"></div>
-        <div class="name4 sideB"></div>
-      </div>
-    </div>
+  <div class="item">
+      <label for="roundPer">每人场数</label>
+      <input type="number" name="" id="roundPre">
   </div>
+  <button id="btn">生产对阵表</button>
+  <div class="result">  </div>
 </body>
 
 </html>
 <script>
+  let personNumDom=document.querySelector('#personNum');
+  let roundPreDom=document.querySelector('#roundPre');
+  let btnDom=document.querySelector('#btn');
+  let resultDom=document.querySelector('.result');
 
-  var personList = [];
-  document.getElementById('addPerson').addEventListener('click', function () { addPeron() });
-  document.getElementById('personList').addEventListener('click', function (e) { delPerson(e) })
-  document.getElementById('createAgainstPlan').addEventListener('click', function () {
-    let plans = createAgainstPlan();
-    createPage(plans);
+  let personNum=personNumDom.value;
+  let roundPre=document.querySelector('#roundPre').value;
+  let result;
+
+  personNumDom.addEventListener('input',function(e){
+    personNum=e.target.value;
   })
-
-  class AgainstPlan {
-    constructor(personList) {
-      this.personList = personList;
-      this.againstPlan = [];
-      this.__getAgainstPlan()
+  roundPreDom.addEventListener('input',function(e){
+  roundPre=e.target.value;
+  })
+  btnDom.addEventListener('click',function(e){
+    resultDom.innerHTML=createErroNode('计算中');
+    data=(new badmin(personNum,roundPre)).result; 
+    if(typeof data ==='string'){
+      resultDom.innerHTML=createErroNode(data);
+    }else{
+      let fragment='';
+      let a=data[1];
+      let b=data[2];
+      let c=data[3];
+      let d=data[4];
+      for(let i=0;i<a.length;i++){
+        let item=[a[i],b[i],c[i],d[i]];
+        fragment+=creatNode(item,i+1);
+      }
+      resultDom.innerHTML=fragment;
     }
-    __getAgainstPlan() {
-      let teammateList = this.__getTeammateList();
-
-      let allMayAgainstPlan = this.__getAllMayAgainstPlan(teammateList);
-      this.__removeReapte(allMayAgainstPlan);
-    }
-    __getTeammateList() {
-      let length = this.personList.length;
-      let teammateList = [];
-      for (let i = 0; i < length - 1; i++) {
-        for (let j = i + 1; j < length; j++) {
-          teammateList.push([this.personList[i], this.personList[j]])
+  })
+  function createErroNode(msg){
+    let template=`
+      <p class="err">${msg}</p>
+    `;
+    return template;
+  }
+  function creatNode(data,i){
+    let template=`
+    <div class="item">
+      <div class="side side1">${data[0]}</div>
+      <div class="side side2">${data[1]}</div>
+      <div class="mark">
+        <p>第${i}场</p>
+        <p>VS</p>
+      </div>
+      <div class="side side3">${data[2]}</div>
+      <div class="side side4">${data[3]}</div>
+    </div>
+      `
+      return template;
+  }
+</script>
+<script>
+  function badmin(personNum,roundPre){
+    this.personNum=personNum;//参赛人数
+    this.roundPre=roundPre;//预设的 每人参赛场数
+    this.maxTime=Math.ceil(roundPre/(personNum-1),0);//为了公平，设定的 两人组队teamMeat 在整个过程中 出现的最多次数
+    this.maxRepeatTeam=roundPre%(personNum-1)||(personNum-1);//为了公平 设定的 比正常的多打1场的 两人组队的个数，例如4个人没人打5场的时候，就会有2组比别人对打1场
+    this.round=personNum*roundPre/4;//总共的场数  四个人算一场
+    this.verRound=personNum*roundPre;//虚拟的场数
+    this.result={1:[],2:[],3:[],4:[]};//数组用于存放 最终结果
+    this.restPerson=[];//计算过程中，每次随机取值，都从这个数组中取值，当某个人打满预设场次的时候，就会从这个数组总剔除
+    this.personFlag={};//数组用于存放 每个人在全过程中出现的次数
+    this.teamMateFlag={};//数组用于存放 每两个人组队teamMeat 在全过程中出现的次数
+    this.start();
+  }
+  badmin.prototype.start=function(){//从这里开始
+  if(0!==this.verRound%4){
+    this.result='数据不符合要求，应该能被4整除';
+    return}
+  if(this.personNum<4){
+    this.result='数据不符合要求，人数不能少于4人';
+    return}
+  let count=0;
+  while(this.result[1].length<this.round){
+      this.init();
+      this.getRes();
+      count++;
+      if(count===50){
+        if(this.result[1].length<this.round){
+          this.result="排阵失败 Try one more time!"
         }
+        return;
       }
-      return teammateList;
     }
-
-    __getAllMayAgainstPlan(teammateList) {
-      let allMayAgainstPlan = [];
-      length = teammateList.length;
-      for (let k = 0; k < length - 1; k++) {
-        for (let q = k + 1; q < length; q++) {
-          let b = [...(new Set([...teammateList[k], ...teammateList[q]]))];
-          b.length === 4 ? allMayAgainstPlan.push([teammateList[k].join(' '), teammateList[q].join(' ')]) : '';
+    console.log(count);
+      let personflags=[],teammateflags=[];
+      for(let person of Object.keys(this.personFlag)){
+        personflags.push(this.personFlag[person])
+      }
+      for(let teammeat of Object.keys(this.teamMateFlag)){
+        teammateflags.push(this.teamMateFlag[teammeat])
+      }
+    console.log('personflags=',personflags,'teammateflags=',teammateflags);
+    if(this.result[1].length<this.round){
+          this.result="排阵失败 Try one more time!"
+        }else{
+    console.table(this.result);}
+  }
+  badmin.prototype.init=function(){
+    //这里开始标示 flag的状态，初始的均为0，flag代表出现次数
+    //另外是restPerson，当某个人的次数 达到上限时候，就从rest中剔除，restPerson表示随机抽取数据的 数据库
+    this.result={1:[],2:[],3:[],4:[]};//初始化结果数组
+    for(let i=0;i<this.personNum;i++){
+      this.personFlag[i+1]=0;//初始化人员表示数组
+      this.restPerson.push(i+1);//初始化 符合条件的人员库 数组
+      for(let j=i+1;j<this.personNum;j++){
+        teamMate=[i+1,j+1].join(' ');
+        this.teamMateFlag[teamMate]=0;//初始化 teamMate标示库
+      }
+    }
+  }
+  badmin.prototype.getRes=function(){
+    //随机生成 组队
+    let count=0;//计数 随机的次数，为了防止死循环，设置count 结束死循环
+    while(this.result[1].length<this.round && count<this.round*1000){//当result的长度等于rount时候，排序完成
+      let item=[];//每组随机生成4个数字，放在item中，标示一场中的四个人
+      if(this.restPerson.length===4){//当可选库只有四个人的时候，就不随机了，把所有的3中组合列出来，依次判断是否符合要求即可
+          this.judge([this.restPerson[0],this.restPerson[1],this.restPerson[2],this.restPerson[3]]);
+          this.judge([this.restPerson[0],this.restPerson[2],this.restPerson[1],this.restPerson[3]]);
+          this.judge([this.restPerson[0],this.restPerson[3],this.restPerson[1],this.restPerson[2]]);
+          return ;     
         }
+      for(let i=0;i<2;i++){//当可选库大于有四个人的时候，采用随机的方式
+          let index1=rand(0,this.restPerson.length-1);
+          let index2=rand(0,this.restPerson.length-1);
+          let max=Math.max(this.restPerson[index1],this.restPerson[index2]);
+          let min=Math.min(this.restPerson[index1],this.restPerson[index2]);
+          item.push(min);
+          item.push(max);
       }
-      return allMayAgainstPlan;
-    }
 
-    __removeReapte(allMayAgainstPlan) {
-      let length = allMayAgainstPlan.length;
-      for (let m = 0; m < length - 1; m++) {
-        for (let n = m + 1; n < length && allMayAgainstPlan[m].length === 2; n++) {
-          for (let x = 0; x < 2 && allMayAgainstPlan[n].length === 2; x++) {
-            if (allMayAgainstPlan[m].indexOf(allMayAgainstPlan[n][x]) !== -1) {
-              allMayAgainstPlan[n].push('tag');
-            }
-          }
-        }
+      this.judge(item);
+      count++;
+    }
+  }
+//判断 已经组队的 是否满足规则
+  badmin.prototype.judge=function(item){
+// 规则1：同一个人不能出现在同一组中，判断随机生成的item中是否有重复的人员
+    let personList=new Set(item);
+    if(personList.size!==4){
+      return false
+    }
+// 规则2：每一个人 出现roundPre次
+    let flag=false;
+    for(let i=0;i<this.personNum;i++){//先剔除已经满场的人员
+      if((this.personFlag[i+1]===this.roundPre) && this.restPerson.includes(i+1)){
+        this.restPerson.splice(this.restPerson.indexOf(i+1),1);
       }
-      this.againstPlan = allMayAgainstPlan.filter(item => { return item.length === 2 });
     }
-  }
-  function addPeron() {
-    let warp = document.getElementById('personList');
-    let template = warp.firstElementChild.cloneNode(true);
-    template.querySelector('.personName').value='';
-    warp.appendChild(template);
-  }
-  function delPerson(e) {
-    if (e.target.tagName !== "BUTTON") { return };
-    let template = e.target.parentNode;
-    let warp = template.parentNode;
-    warp.removeChild(template);
-  }
-  function createPersonList() {
-    let personList = [];
-    let warp = document.getElementById('personList');
-    let nodeList = warp.querySelectorAll('.personName');
-    for (node of nodeList) {
-      personList.push(node.value);
-    }
-    return [...new Set(personList)]
-  }
-  function createAgainstPlan() {
-    personList = createPersonList();
-    var plans = new AgainstPlan(personList).againstPlan;
-    plans.forEach(item => { console.log('对阵', item) });
-    return plans;
-  }
-
-  function createPage(plans) {
-    let warp = document.getElementById('againstList');
-    let template = warp.firstElementChild.cloneNode(true);
-    warp.innerHTML='';
-    let fragment = document.createDocumentFragment()
-    for (let i = 0; i < plans.length; i++) {
-      let node=template.cloneNode(true);     
-      let newPlans=[].concat(plans[i][0].split(' '),plans[i][1].split(' '));
-      for(let j=0;j<4;j++){
-        node.querySelector(`.name${j+1}`).textContent=newPlans[j];
+    for(let i=0;i<4;i++){//如果 随机生成的四个人中，有人不在 人员库中，该item不符合要求
+      if(!this.restPerson.includes(item[i])){  
+        return false;
       }
-      fragment.appendChild(node)
     }
-    warp.appendChild(fragment);
+// 规则3：同两个人 在所有组队中 出现的次数最多为max
+    let teamA=item.slice(0,2).join(' ');
+    let teamB=item.slice(2,4).join(' ');
+    let maxTeam=Math.max(this.teamMateFlag[teamA],this.teamMateFlag[teamB]);//某一队 超出上限时候，该item不符合要求
+    if(maxTeam>=this.maxTime){
+      return false
+    } 
+// 规则4：每一轮结束后，每个人的场次数量相差最多为1；
+//这是一条软规则，防止最终结果排阵失败，
+let max=0,
+    min=this.roundPre;
+  for(let i=0;i<this.personNum;i++){
+    let verTime=this.personFlag[i+1]+(item.includes(i+1)?1:0);
+    max=Math.max(max,verTime);
+    min=Math.min(min,verTime);
+    if(max-min>1){
+      return false
+    }
+  }
+  // 规则5：每一轮结束后，每组队员的场次数量相差最多为1；
+//这是一条软规则，防止最终结果排阵失败，
+    max=0,
+    min=this.maxTime;
+  let teamMates=Object.keys(this.teamMateFlag);
+  for(let team of teamMates){
+    let verTime=this.teamMateFlag[team]+(team===teamA||team===teamB?1:0);
+    max=Math.max(max,verTime);
+    min=Math.min(min,verTime);
+    if(max-min>1){
+      return false
+    }
+  }
+//当满足以上四个规则时候，将该item 插入到已排队列中
+    this.result[1].push(item[0]);
+    this.result[2].push(item[1]);
+    this.result[3].push(item[2]);
+    this.result[4].push(item[3]);
+//依次更新 flag的数据
+    this.teamMateFlag[teamA]++;
+    this.teamMateFlag[teamB]++;
+    this.personFlag[item[0]]++;
+    this.personFlag[item[1]]++;
+    this.personFlag[item[2]]++;
+    this.personFlag[item[3]]++;
   }
 
-
+function rand(L,R){
+    return Math.round(Math.random()*(R-L),0)+L
+  }
 </script>
