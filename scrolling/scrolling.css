@@ -1,0 +1,86 @@
+*{
+  margin: 0;
+  padding: 0;
+}
+ul,ol{
+  list-style: none;
+}
+/*消除图片底部3像素距离*/
+img{
+  vertical-align: top;
+}
+#scroll{
+  width: 500px;
+  height: 200px;
+  margin: 100px auto;
+  border: 1px solid #ccc;
+  padding: 7px;
+  overflow: hidden;
+  position: relative;
+}
+#box{
+  width: 500px;
+  height: 200px;
+  overflow: hidden;
+  position: relative;
+}
+.container{
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+.container li{
+  float: left;
+}
+.container li img{
+  width: 500px;
+  height: 200px;
+  box-sizing: border-box;
+  border: #ccc soild 2px;
+}
+.orderNum{
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+}
+.orderNum li{
+  float: left;
+  width: 20px;
+  height: 20px;
+  background: pink;
+  text-align: center;
+  line-height: 20px;
+  border-radius: 50%;
+  background-color: pink;             
+  margin-left:10px ;
+  cursor: pointer;
+}
+.orderNum li.current{
+  background-color: purple;
+}
+.toLeft,.toRight{
+  display: inline-block;
+  width: 40px;
+  height:80px;
+  line-height: 80px;
+  vertical-align: middle;
+  text-align: center;
+  font-size: 36px;
+  background: purple;
+  opacity: .5;
+  top:50%;
+  transform:translateY(-50%);
+  position: absolute;
+}
+.toLeft{
+  left:0
+}
+.toRight{
+  right:0
+}
+.toRight::after{
+  content: ">"
+}
+.toLeft::after{
+  content: "<"
+}
