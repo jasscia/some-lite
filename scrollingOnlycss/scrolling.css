@@ -29,8 +29,10 @@ img{
   left: 0;
   top: 0;
   width: 500%; 
+  animation: scrollingStep 10s steps(4,start) 2s both infinite;
   -webkit-animation: scrollingStep 10s steps(4,start) 2s both infinite;
-  /* -webkit-animation: scrolling 10s both 2s infinite; */
+  /* animation: scrolling 10s both 2s infinite;
+  -webkit-animation: scrolling 10s both 2s infinite; */
 }
 @keyframes scrollingStep{
   0%{
