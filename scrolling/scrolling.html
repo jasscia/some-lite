@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>轮播</title>
+        <style type="text/css">
+            *{
+                margin: 0;
+                padding: 0;
+            }
+            ul,ol{
+                list-style: none;
+            }
+            /*消除图片底部3像素距离*/
+            img{
+                vertical-align: top;
+            }
+            #scroll{
+                width: 500px;
+                height: 200px;
+                margin: 100px auto;
+                border: 1px solid #ccc;
+                padding: 7px;
+                overflow: hidden;
+                position: relative;
+            }
+            #box{
+                width: 500px;
+                height: 200px;
+                overflow: hidden;
+                position: relative;
+            }
+            #container{
+              
+                position: absolute;
+                left: 0;
+                top: 0;
+                /* transition:left 0.5s 1.5s linear; */
+            }
+            #container li{
+                float: left;
+                padding:2px;
+            }
+            #ol{
+                position: absolute;
+                right: 10px;
+                bottom: 10px;
+            }
+            #ol li{
+                float: left;
+                width: 20px;
+                height: 20px;
+                background: pink;
+                text-align: center;
+                line-height: 20px;
+                border-radius: 50%;
+                background-color: pink;             
+                margin-left:10px ;
+                cursor: pointer;
+            }
+            #ol li.current{
+                background-color: purple;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="scroll" class="scroll">
+            <div id="box" class="box">
+                <ul id="container">
+                    <li><img src="./clock.png" width="500" height="200"></li>
+                    <li><img src="http://i1.mifile.cn/a4/xmad_15246478201362_kKxQF.jpg" width="500" height="200"></li>
+                    <li><img src="./src.jpg" width="500" height="200"></li>
+                    <!-- <li><img src="./src.jpg" width="500" height="200"></li> -->
+                    <!-- <li><img src="./src.jpg" width="500" height="200"></li> -->
+                </ul>
+                <ol id="ol">
+                    
+                </ol>
+            </div>
+        </div>
+
+        <script>//函数
+
+
+           function Swiper(selctor){
+                var el= document.querySelector(selctor);
+                var children = el.children;
+                var first=children[0].cloneNode(true);
+                let itemWidth=children[0].offsetWidth;
+                console.log(itemWidth)
+                var count =children.length;
+                    el.appendChild(first);
+                    el.style.width= (count+1)*itemWidth+'px';
+                let num=0
+                    setInterval(()=>{
+                            el.style.left='-'+num*itemWidth+'px';
+                            console.log(el.style.left)
+                            console.log(num,count)
+                            num++;
+                            if(num>count){
+                                num=1;
+                            }
+                    },1500)
+                    
+
+           }
+            function creatLi_for_ol(ol,length){
+                let fragment=document.createDocumentFragment()
+                for (let i=0;i<length-1;i++) {
+                    let li_of_ol = document.createElement("li");// 创建li元素
+                    if(i===0){
+                      li_of_ol.className="current"
+                    }
+                    li_of_ol.innerHTML = i + 1;// 给li里面添加文字  1 2 3 4 5
+                    fragment.appendChild(li_of_ol);// 将li元素添加到ol里面
+                }
+                return fragment
+              }
+            function Scrolling(ul,ol){
+              this.currentIndex=0;
+              this.ul = ul;
+              this.lis_of_ul = this.ul.children;
+              this.length=this.lis_of_ul.length-1;
+              this.li_Width = lis_of_ul[0].offsetWidth;
+              this.ol=ol;
+              this.lis_of_ol = this.ol.children;
+              
+            this.scrolling=()=>{
+              if(this.currentIndex===this.length ){
+                // this.ul.style.left=-(this.currentIndex+1)*li_Width+"px";
+                setTimeout(()=>{
+                  this.currentIndex=0
+                  this.ul.style.transition="";
+                  this.ul.style.left=-(this.currentIndex)*li_Width+"px";
+                  console.log(this.currentIndex,this.ul.style.transition,this.ul.style.left)
+                  
+                   this.ul.style.transition="left 1s linear";
+                   this.ul.style.left=-(this.currentIndex+1)*li_Width+"px";
+                  console.log(this.currentIndex,this.ul.style.transition,this.ul.style.left)
+                },1000)
+                // this.currentIndex=0;
+              }else{
+                this.ul.style.transition="left 0.5s 1.5s linear";
+              }
+              
+              this.ul.style.left=-(this.currentIndex+1)*li_Width+"px";
+              console.log(this.currentIndex,this.ul.style.transition,this.ul.style.left)
+              setTimeout(()=>{
+                this.lis_of_ol[this.currentIndex].className="";
+               
+                this.lis_of_ol[this.currentIndex===this.length?0:this.currentIndex].className="current";
+              },1500)
+            }
+            }
+        </script>
+        <script>//实操
+            new Swiper('#container');
+        </script>
+    </body>
+</html>
