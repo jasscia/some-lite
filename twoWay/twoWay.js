@@ -27,10 +27,9 @@ class Dep{
       sub.update()
     }
   }
-  depend(){//收集依赖
+  depend(){
     if (Dep.target) {
       Dep.target.addDep(this)
-      console.log('addDep',this,Dep.target)
     }
   }
 }
@@ -46,12 +45,11 @@ class Watcher{
     this.cb=cb;
     this.newDep=[];
     this.value =this.get()
-    console.log('this in watcher:',this)
   }
   get(){
     pushTarget(this)
     const vm=this.vm
-    let value=this.getter.call(vm,vm)
+    let value=this.getter()
     return value
   }
   addDep (dep) {
@@ -67,12 +65,10 @@ class Watcher{
 }
 //定义Observer
 const arrayKeys=Object.getOwnPropertyNames(ArrayMethod)
-console.log('arrayKey in Observer',arrayKeys)
 class Observer{
   constructor(state){
     this.state=state;
     this.dep=new Dep()
-    console.log('dep in Observer',this.dep)
     state.__ob__=this
     if(Array.isArray(state)){
       const augment = state.__proto__ ? protoAugment : copyAugment  
@@ -84,9 +80,7 @@ class Observer{
   }
   walk (obj) {
     const keys = Object.keys(obj)
-    console.log('key of obj=',keys,obj)
     for (let i = 0; i < keys.length; i++) {
-      //此处我做了拦截处理，防止死循环，Vue中在oberve函数中进行的处理
       if(keys[i]=='__ob__') return;
       defineReactive(obj, keys[i], obj[keys[i]])
     }
@@ -103,7 +97,6 @@ function observe(state){
   return ob;
 }
 function defineReactive (obj,key,val) {
-  console.log('defineReactive,key=',key)
   const dep = new Dep()
   //处理children
   let childOb = observe(val)
@@ -112,15 +105,12 @@ function defineReactive (obj,key,val) {
     configurable: true,
     get: function reactiveGetter () {
       console.log(`调用get获取值，key为${key}值为${val}`)
-      console.log('Dep',Dep.target)
         const value = val
         if (Dep.target) {
           dep.depend()
           if (childOb) {
-            console.log('childOb',childOb)
             childOb.dep.depend()
           }
-          //此处是对Array数据类型的依赖收集
           if (Array.isArray(value)) {
               dependArray(value)
           }
@@ -130,17 +120,15 @@ function defineReactive (obj,key,val) {
     set: function reactiveSetter (newVal) {
       console.log(`调用了set，key为${key}值为${newVal}`)
         const value = val
-         val = newVal
+        val = newVal
         childOb = observe(newVal)
         dep.notify()
     }
   })
 }
-//重新赋值Array的__proto__属性
 function protoAugment (target,src) {
   target.__proto__ = src
 }
-//不支持__proto__的直接修改相关属性方法
 function copyAugment (target, src, keys) {
   for (let i = 0, l = keys.length; i < l; i++) {
     const key = keys[i]
@@ -152,7 +140,6 @@ function dependArray (value) {
     e = value[i]
     e && e.__ob__ && e.__ob__.dep.depend()
     if (Array.isArray(e)) {
-    	//循环遍历chindren进行依赖收集
         dependArray(e)
     }
   }
@@ -160,7 +147,6 @@ function dependArray (value) {
 
 
 // 测试：
-// 定义一个data对象：
 let data={
   name:'zane',
   blog:'https://blog.seosiwei.com/',
@@ -171,20 +157,16 @@ let data={
   ]
 }
 
-// 调用watcher，并进行数据监听
 let getUpdates = (vm)=>{
-	console.log('默认调用一次，进行依赖收集')
+  console.log('默认调用一次，进行依赖收集')
+  return vm
 }
-new Watcher(this,getUpdates)
+let watcher=new Watcher(this,getUpdates)
 observe(data)
 
-// 调用get收集依赖
 
-//收集name依赖
 data.name
-//收集hobby依赖
 data.hobby
-// 测试数据监听
 
 data.name = 'zhangshan'
 data.hobby.push('volleyball')
@@ -192,4 +174,5 @@ data.hobby.push('volleyball')
 data.blog = 'http://www.seosiwei.com/'
 data.list.push({name:'xiaowang'})
 
+console.log(Dep.target)
 
