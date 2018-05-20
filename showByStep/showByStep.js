@@ -5,9 +5,7 @@ var text=`hi,my name is jassy,i come from china.
           how do you think about it?
           the end,thank you!`
 function xhr(method,url,data={}){
-  console.log('xhr fn')
   return new Promise(function(resolve,reject){
-    console.log('promise pramse:',method,url,data)
     var ajax = new XMLHttpRequest();
     ajax.open(method,url,data);
     ajax.send();
@@ -25,7 +23,6 @@ var innerText='';
 var textDom='';
 async function start(){
   text=await xhr('GET','http://localhost:3000/')
-  console.log('text:',text)
   textDom=document.getElementById('text')
   innerText=textDom.innerHTML
   length=text.length
