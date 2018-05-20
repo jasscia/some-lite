@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>service worker</title>
+</head>
+<body>
+  <h1>serviceWorker</h1>
+  <img src="origin.jpeg" alt="" class="img origin" title="origin">
+  <img src="dircet.jpg" alt="" class="img dircet" title="dircet">
+
+  <script>
+      if(navigator.serviceWorker){
+        navigator.serviceWorker.register('/sw.js').then(
+          function(registion){
+            console.log(registion)
+            console.log('success',registion.scope)
+          }
+        ).catch(
+          function(err){
+            console.log('failed',err)
+          }
+        )
+      }
+    </script>
+  <!-- <script>
+    fetch('http://i1.mifile.cn/a4/xmad_15263512955904_ehZUK.jpg').then(
+      function(img){
+        console.log(img)
+      }
+    ).catch(function(){
+      console.log('failed')
+    })
+  </script> -->
+</body>
+</html>

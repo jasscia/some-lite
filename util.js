@@ -56,7 +56,30 @@ var mypromise  = new myPromise(function(resolve){
 }).then((value)=>console.log(value))
 
 
+function curring(fn){
+  let _args=[]
+  return function(){
+    if(arguments.length===0){
+      return fn(..._args)
+    }
+    _args=[].concat.apply(_args,arguments)
+    return arguments.callee
+  }
+}
+var multi=function () {
+  var total = 0;
+  if(!arguments.length){
+    return
+  }
+  total=[].slice.call(arguments).reduce((a,b)=>{return a+b})
+  return total;
+};
+sum=curring(multi)
+sum(100)(100)(1)
+a=sum()
+console.log(a)
   export{
     depclone,
-    myPromise
+    myPromise,
+    curring
   }
