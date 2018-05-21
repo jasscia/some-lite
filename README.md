@@ -14,4 +14,4 @@
 ### 5 css实现轮播
 * 主要技术：css动画（帧动画）
 ### 6 简历异步输出
-* 主要技术：异步 express fs readWord
+* 主要技术：异步 express fs 读取Word
