@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>正方体</title>
+    <style>
+    	html, body, div, span, h1, h2, h3, h4, h5, h6, p,a, img, ol, ul, li{
+            margin:0;padding:0;border:0;outline:0;
+        }
+        #wapper{
+        	-webkit-perspective:800;
+		    -webkit-perspective-origin:50% 50%;
+        }       
+		#cube{
+		    height:200px;
+		    width:200px;
+		    margin:100px auto;
+		    
+		    -webkit-transform-style:preserve-3d;
+		    animation: demo 5s linear infinite; 
+		    /*-webkit-transform-origin:0;*/
+		    
+		}
+		.surf{
+		    width: 200px;
+		    height: 200px;
+		    position: absolute;
+		    margin: 0 auto;
+		    background-color: rgba(0, 0, 0, 0.5);
+		    font-size: 200px;
+		    text-align: center;
+		    line-height: 200px;
+		    font-weight: 900;
+		    color: #fff;
+
+		}
+	#range-controlX,#range-controlY,#range-controlZ,#range-control-translateX,#range-control-translateY,#range-control-translateZ{
+		margin:0px auto;
+		width:450px;
+
+	}
+	#X,#Y,#Z,#translateX,#translateY,#translateZ{
+		min-width:40px;
+		height: 20px;
+		margin: 0;
+		background: #ddd;
+		display: inline-block;
+		text-align: center;
+	}
+	@keyframes demoX {
+    	from {
+        transform: rotateX(0deg);
+	    }
+	    to {
+	        transform: rotateX(360deg);
+	    }
+	}
+	@keyframes demoY {
+	    from {
+	        transform: rotateY(0deg);
+	    }
+	    to {
+	        transform: rotateY(360deg);
+	    }
+	}
+	@keyframes demoZ {
+	    from {
+	        transform: rotateZ(0deg);
+	    }
+	    to {
+	        transform: rotateZ(360deg);
+	    }
+	}
+	@keyframes demo {
+	    from {
+	        transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg);
+	    }
+	    to {
+	        transform: rotateX(360deg) rotateY(360deg) rotateZ(360deg);
+	    }
+	}
+		#front {}
+
+		#behead {
+		    -webkit-transform: translateZ(-200px);
+		}
+
+		#left {
+		    -webkit-transform-origin: left;
+		    -webkit-transform: rotateY(90deg);
+		}
+
+		#right {
+		    -webkit-transform-origin: right;
+		    -webkit-transform: rotateY(-90deg);
+		}
+
+		#top {
+		    -webkit-transform-origin: top;
+		    -webkit-transform: rotateX(-90deg);
+		}
+
+		#bottom {
+		    -webkit-transform-origin: bottom;
+		    -webkit-transform: rotateX(90deg);
+		}
+	
+}
+
+    </style>
+</head>
+<body>
+	<div id="wapper">
+		 <div id="cube">
+	        <div class="surf" id="top">5</div>
+	        <div class="surf" id="bottom">6</div>
+	        <div class="surf" id="left">2</div>
+	        <div class="surf" id="right">4</div>
+	        <div class="surf" id="front">1</div>
+	        <div class="surf" id="behead">3</div>
+	    </div>
+	</div>
+    <div class="control">
+		<span>tranformX:<div id="X">0</div>deg</span>
+		<input id="range-controlX" type="range" value="0" min="-360" max="360" onchange=transform()><br/>
+		<span>tranformY:<div id="Y">0</div>deg</span>
+		<input id="range-controlY" type="range" value="0" min="-360" max="360" onchange=transform()><br/>
+		<span>tranformZ:<div id="Z">0</div>deg</span>
+		<input id="range-controlZ" type="range" value="0" min="-360" max="360" onchange=transform()><br/>
+	</div>
+</body>
+<script type="text/javascript">
+		function transform(){
+		var x=parseInt(document.getElementById("range-controlX").value);
+		var y=parseInt(document.getElementById("range-controlY").value);
+		var z=parseInt(document.getElementById("range-controlZ").value);
+		document.getElementById("X").innerHTML=x;
+		document.getElementById("Y").innerHTML=y;
+		document.getElementById("Z").innerHTML=z;
+	}
+</script>
+</html>
