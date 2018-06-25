@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -14,13 +15,11 @@
       max-width: 420px;
       margin: 0 auto;
     }
-
     .item {
       margin: 20px 0;
       text-align: end;
       padding-right: 25%;
     }
-
     input,
     #btn {
       padding: 10px 0;
@@ -30,22 +29,18 @@
       text-align: center;
       width: 40%;
     }
-
     #btn {
       display: block;
       padding: 10px;
       width: 50%;
       margin: auto;
     }
-
     .result {
       font-size: 14px;
     }
-
     .result .err {
       text-align: center;
     }
-
     .result .item {
       margin: 10px auto;
       padding: 5px;
@@ -53,13 +48,11 @@
       justify-content: space-around;
       border-bottom: 5px solid #eee;
     }
-
     .result .side {
       flex: 1;
       font-size: 20px;
       text-align: center;
     }
-
     .result .mark p {
       margin: 0;
       padding: 0;
@@ -87,11 +80,9 @@
   let roundPreDom = document.querySelector('#roundPre');
   let btnDom = document.querySelector('#btn');
   let resultDom = document.querySelector('.result');
-
   let personNum = personNumDom.value;
   let roundPre = document.querySelector('#roundPre').value;
   let result;
-
   personNumDom.addEventListener('input', function (e) {
     personNum = e.target.value;
   })
@@ -143,9 +134,7 @@
     this.personNum = personNum;//参赛人数
     this.roundPre = roundPre;//预设的 每人参赛场数
     this.maxTime = Math.ceil(roundPre / (personNum - 1), 0);//为了公平，设定的 两人组队teamMeat 在整个过程中 出现的最多次数
-    this.maxRepeatTeam = roundPre % (personNum - 1) || (personNum - 1);//为了公平 设定的 比正常的多打1场的 两人组队的个数，例如4个人没人打5场的时候，就会有2组比别人对打1场
     this.round = personNum * roundPre / 4;//总共的场数  四个人算一场
-    this.verRound = personNum * roundPre;//虚拟的场数
     this.result = { 1: [], 2: [], 3: [], 4: [] };//数组用于存放 最终结果
     this.restPerson = [];//计算过程中，每次随机取值，都从这个数组中取值，当某个人打满预设场次的时候，就会从这个数组总剔除
     this.personFlag = {};//数组用于存放 每个人在全过程中出现的次数
@@ -153,7 +142,7 @@
     this.start();
   }
   badmin.prototype.start = function () {//从这里开始
-    if (0 !== this.verRound % 4) {
+    if (0 !== personNum * roundPre % 4) {
       this.result = '数据不符合要求，应该能被4整除';
       return
     }
@@ -181,10 +170,11 @@
       teammateflags.push(this.teamMateFlag[teammeat])
     }
     console.log('第',count,'次 计算出结果');
+    console.log(this.personNum,this.roundPre)
     console.log('personflags=', personflags, '\nteammateflags=', teammateflags);
-    if (this.result[1].length >= this.round) {
-      console.table(this.result);
-    }
+    // if (this.result[1].length >= this.round) {
+    //   console.table(this.result);
+    // }
   }
   badmin.prototype.init = function () {
     //这里开始标示 flag的状态，初始的均为0，flag代表出现次数
@@ -218,7 +208,6 @@
         item.push(min);
         item.push(max);
       }
-
       this.judge(item);
       count++;
     }
@@ -229,18 +218,6 @@
     let personList = new Set(item);
     if (personList.size !== 4) {
       return false
-    }
-    // 规则2：每一个人 出现roundPre次
-    let flag = false;
-    for (let i = 0; i < this.personNum; i++) {//先剔除已经满场的人员
-      if ((this.personFlag[i + 1] === this.roundPre) && this.restPerson.includes(i + 1)) {
-        this.restPerson.splice(this.restPerson.indexOf(i + 1), 1);
-      }
-    }
-    for (let i = 0; i < 4; i++) {//如果 随机生成的四个人中，有人不在 人员库中，该item不符合要求
-      if (!this.restPerson.includes(item[i])) {
-        return false;
-      }
     }
     // 规则3：同两个人 在所有组队中 出现的次数最多为max
     let teamA = item.slice(0, 2).join(' ');
@@ -264,7 +241,7 @@
     // 规则5：每一轮结束后，每组队员的场次数量相差最多为1；
     //这是一条软规则，防止最终结果排阵失败，
     max = 0,
-      min = this.maxTime;
+    min = this.maxTime;
     let teamMates = Object.keys(this.teamMateFlag);
     for (let team of teamMates) {
       let verTime = this.teamMateFlag[team] + (team === teamA || team === teamB ? 1 : 0);
@@ -274,21 +251,34 @@
         return false
       }
     }
-    //当满足以上四个规则时候，将该item 插入到已排队列中
-    this.result[1].push(item[0]);
-    this.result[2].push(item[1]);
-    this.result[3].push(item[2]);
-    this.result[4].push(item[3]);
-    //依次更新 flag的数据
+
+    //当满足以上4个规则时候，跟新数据状态
+    for(let i=0;i<4;i++){
+      this.result[i+1].push(item[i]);//更新result
+      this.personFlag[item[i]]++;//更新personFlag
+      if ((this.personFlag[item[i]] == this.roundPre)) {//更新restPerson的数据
+        let index=this.restPerson.indexOf(item[i]);
+        this.restPerson.splice(index, 1);
+      }
+    }
+    //依次更新 teamMateflag的数据
+    // let teamA = item.slice(0, 2).join(' ');
+    // let teamB = item.slice(2, 4).join(' ');
     this.teamMateFlag[teamA]++;
     this.teamMateFlag[teamB]++;
-    this.personFlag[item[0]]++;
-    this.personFlag[item[1]]++;
-    this.personFlag[item[2]]++;
-    this.personFlag[item[3]]++;
   }
-
   function rand(L, R) {
     return Math.round(Math.random() * (R - L), 0) + L
   }
 </script>
+
+<script>
+    // 测试用例
+    // for(let personNum=4;personNum<=10;personNum++){
+    for(let personNum=11;personNum<=20;personNum++){
+      for(let roundPer=16;roundPer<=16;roundPer++){
+        console.log('personNum=',personNum,'roundPer=',roundPer);
+        new badmin(personNum, roundPer);
+      }
+    }
+  </script>

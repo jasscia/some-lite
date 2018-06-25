@@ -17,3 +17,5 @@
 * 主要技术：异步 express fs 读取Word
 ### 7 3d旋转的 立方体
 * 主要技术：3d translate
+### 8 PWA简单实现
+* [learn more](https://lavas.baidu.com/pwa/offline-and-cache-loading/web-storage/indexeddb-best-practices-app-state)
