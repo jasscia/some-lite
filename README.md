@@ -19,3 +19,7 @@
 * 主要技术：3d translate
 ### 8 PWA简单实现
 * [learn more](https://lavas.baidu.com/pwa/offline-and-cache-loading/web-storage/indexeddb-best-practices-app-state)
+### 9 算法
+* 算法背景：一个圆环上有一些灯， 他们的 亮/暗状态 是随机的， 但是 只要按一盏灯，它的状态 以及 与它相邻的灯的状态也会改变；  求一种算法 使得所有的灯全量
+* UI效果图
+![](./buld-on/ui.png)
